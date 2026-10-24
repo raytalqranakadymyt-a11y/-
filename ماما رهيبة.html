@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#15100d">
+<meta name="description" content="ماما رهيبة - أكل بيتي مصري ومحشي ودسبسيتو">
+<title>ماما رهيبة | طعم البيت المصري</title>
+<link rel="icon" type="image/png" href="logo.jpeg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#15100d;
+  --card:#211813;
+  --gold:#e9b65b;
+  --cream:#fff3df;
+  --muted:#c4b4a2;
+  --border:rgba(233,182,91,.22);
+}
+
+* {box-sizing:border-box}
+html {scroll-behavior:smooth;scroll-padding-top:90px}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--cream);
+  font-family:'Cairo',sans-serif;
+}
+
+button,input,textarea {font:inherit}
+button {cursor:pointer}
+a {color:inherit;text-decoration:none}
+.container {width:min(1150px,92%);margin:auto}
+
+header {
+  position:sticky;top:0;z-index:10;
+  background:rgba(21,16,13,.96);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);
+}
+
+.navbar {
+  min-height:75px;display:flex;align-items:center;
+  justify-content:space-between;gap:15px;
+}
+
+.logo {font-size:25px;font-weight:900;color:var(--gold)}
+.logo small {display:block;font-size:10px;color:var(--muted)}
+.nav-links {display:flex;gap:18px;font-size:13px}
+.nav-links a:hover {color:var(--gold)}
+
+.cart-button,.main-button {
+  border:0;background:var(--gold);color:#25170b;
+  padding:10px 16px;border-radius:11px;font-weight:900;
+}
+
+.hero {
+  text-align:center;padding:85px 0 65px;
+  background:
+    radial-gradient(ellipse at top right,#60301c55,transparent 50%),
+    radial-gradient(ellipse at bottom left,#9e342733,transparent 45%);
+  border-bottom:1px solid var(--border);
+}
+
+.hero-label {
+  display:inline-block;border:1px solid var(--border);
+  border-radius:30px;padding:6px 15px;color:var(--gold);
+  font-size:13px;
+}
+
+.hero h1 {
+  font-size:clamp(38px,7vw,70px);
+  line-height:1.4;margin:20px 0 12px;font-weight:900;
+}
+
+.hero h1 span {color:var(--gold)}
+
+.hero p {
+  color:var(--muted);max-width:650px;
+  margin:0 auto 25px;font-size:16px;
+}
+
+.hero-actions {
+  display:flex;justify-content:center;gap:12px;flex-wrap:wrap;
+}
+
+.outline-button {
+  border:1px solid var(--gold);color:var(--gold);
+  padding:10px 18px;border-radius:11px;font-weight:800;
+}
+
+.features {
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-top:45px;
+}
+
+.feature {
+  background:#ffffff08;border:1px solid var(--border);
+  border-radius:15px;padding:16px 8px;
+}
+
+.feature strong {display:block;color:var(--gold)}
+.feature span {font-size:12px;color:var(--muted)}
+
+section {padding:70px 0}
+.section-title {text-align:center;margin-bottom:30px}
+.section-title .eyebrow {color:var(--gold);font-size:13px;font-weight:800}
+.section-title h2 {font-size:clamp(27px,4vw,40px);margin:5px 0;font-weight:900}
+.section-title p {color:var(--muted);font-size:14px}
+
+.search {
+  display:block;width:100%;margin-bottom:20px;
+  background:var(--card);color:white;border:1px solid #48372a;
+  border-radius:12px;padding:13px 16px;outline:none;
+}
+
+.search:focus {border-color:var(--gold)}
+
+.filters {
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;
+  margin-bottom:20px;
+}
+
+.filter {
+  flex-shrink:0;background:var(--card);color:var(--cream);
+  border:1px solid #48372a;border-radius:25px;padding:8px 16px;
+}
+
+.filter.active,.filter:hover {
+  background:var(--gold);color:#25170b;border-color:var(--gold);
+}
+
+.menu-grid {
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;
+}
+
+.food-card {
+  background:var(--card);border:1px solid #493426;
+  border-radius:18px;overflow:hidden;transition:.2s;
+}
+
+.food-card:hover {transform:translateY(-4px);border-color:var(--gold)}
+
+/* مكان الصور: مربع بنسبة 1:1 */
+.food-image {
+  width:100%;
+  aspect-ratio:1 / 1;
+  height:auto;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#39251a,#191310);
+  border-bottom:1px solid var(--border);
+}
+
+/* الصورة تملأ المكان المربع */
+.food-image img {
+  width:100%;
+  height:100%;
+  aspect-ratio:1 / 1;
+  object-fit:cover;
+  display:block;
+}
+
+/* النص الظاهر في مكان الصورة عند عدم وجودها */
+.placeholder {
+  display:none;
+  text-align:center;
+  color:var(--gold);
+  padding:10px;
+}
+
+.food-image .placeholder {
+  width:100%;
+  height:100%;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+
+.placeholder span {display:block;font-size:35px}
+
+.food-content {padding:16px}
+.food-content h3 {margin:0 0 5px;font-size:17px}
+.description {color:var(--muted);font-size:12px;min-height:42px}
+
+.food-bottom {
+  display:flex;justify-content:space-between;
+  align-items:center;gap:8px;margin-top:12px;
+}
+
+.price {color:var(--gold);font-size:18px;font-weight:900}
+
+.add-button {
+  background:var(--gold);color:#25170b;border:0;
+  border-radius:9px;padding:8px 11px;font-weight:900;font-size:12px;
+}
+
+.add-button:disabled {opacity:.5;cursor:not-allowed}
+
+.about {
+  background:#1b1410;border-block:1px solid var(--border);
+  text-align:center;
+}
+
+.about-content {max-width:750px;margin:auto}
+.about-content p {color:var(--muted)}
+
+.order-grid {
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;
+  align-items:start;
+}
+
+.panel {
+  background:var(--card);border:1px solid #493426;
+  border-radius:18px;padding:22px;
+}
+
+.panel h3 {color:var(--gold);margin-top:0}
+.cart-items {display:flex;flex-direction:column;gap:12px}
+.empty {text-align:center;color:var(--muted);padding:20px 0}
+
+.cart-item {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding-bottom:12px;border-bottom:1px solid #493426;
+}
+
+.cart-item small {display:block;color:var(--gold)}
+.qty {display:flex;align-items:center;gap:9px}
+
+.qty button {
+  width:27px;height:27px;border:0;border-radius:7px;
+  background:#443329;color:white;font-weight:900;
+}
+
+.total {
+  display:flex;justify-content:space-between;
+  border-top:1px solid var(--border);margin-top:16px;padding-top:15px;
+  font-size:18px;font-weight:900;
+}
+
+.total strong {color:var(--gold)}
+.field {margin-bottom:13px}
+.field label {display:block;font-size:13px;margin-bottom:5px}
+
+.field input,.field textarea {
+  width:100%;background:#130f0d;color:white;
+  border:1px solid #493426;border-radius:10px;
+  padding:11px;outline:none;
+}
+
+.field input:focus,.field textarea:focus {border-color:var(--gold)}
+.field textarea {min-height:75px;resize:vertical}
+
+.whatsapp {
+  width:100%;border:0;border-radius:11px;padding:13px;
+  background:#25d366;color:#073416;font-weight:900;
+}
+
+.note {font-size:11px;color:var(--muted)}
+
+.contact {
+  text-align:center;background:var(--card);
+  border:1px solid var(--border);border-radius:15px;
+  padding:20px;margin-top:25px;
+}
+
+.contact p {color:var(--muted)}
+
+footer {
+  text-align:center;padding:28px 0;background:#0c0908;
+  border-top:1px solid var(--border);
+}
+
+footer p {color:var(--muted);font-size:12px}
+
+.floating-whatsapp {
+  position:fixed;bottom:18px;left:18px;z-index:20;
+  width:54px;height:54px;display:grid;place-items:center;
+  border-radius:50%;background:#25d366;color:#073416;
+  font-size:27px;box-shadow:0 5px 20px #0008;
+}
+
+.toast {
+  position:fixed;bottom:82px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:#25170b;padding:10px 18px;
+  border-radius:10px;font-weight:800;display:none;z-index:30;
+  max-width:90%;text-align:center;
+}
+
+.toast.show {display:block}
+
+@media(max-width:800px) {
+  .nav-links {gap:9px;font-size:11px}
+  .menu-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .order-grid {grid-template-columns:1fr}
+}
+
+@media(max-width:520px) {
+  .navbar {flex-wrap:wrap;padding:10px 0}
+  .logo {font-size:21px}
+  .nav-links {order:3;width:100%;justify-content:space-between}
+  .cart-button {padding:8px 10px;font-size:12px}
+  .hero {padding:60px 0}
+  .hero p {font-size:14px}
+  .features {gap:6px}
+  .feature {padding:12px 5px}
+  .feature strong {font-size:12px}
+  .feature span {font-size:10px}
+  section {padding:50px 0}
+  .menu-grid {gap:10px}
+  /* لا نضع ارتفاعًا ثابتًا للصور هنا حتى تظل مربعة */
+  .food-content {padding:11px}
+  .food-content h3 {font-size:14px}
+  .description {font-size:11px}
+  .price {font-size:15px}
+  .add-button {padding:7px;font-size:11px}
+  .panel {padding:15px}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="container navbar">
+    <a href="#home" class="logo">
+      ماما رهيبة
+      <small>طعم البيت المصري الأصيل ❤️</small>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#home">الرئيسية</a>
+      <a href="#menu">المنيو</a>
+      <a href="#about">عننا</a>
+      <a href="#order">اطلب</a>
+    </nav>
+
+    <button class="cart-button" onclick="goToCart()">
+      🛒 السلة <span id="cart-count">0</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-label">🍲 معمول بحب زي أكل البيت</div>
+      <h1>أكل بيتي أصيل<br><span>من إيد ماما رهيبة</span></h1>
+      <p>
+        من المحشي المصري الأصيل لأحلى الوجبات والدسبسيتو.
+        اختار اللي بتحبه، وضيفه للسلة، واطلب بسهولة من واتساب.
+      </p>
+
+      <div class="hero-actions">
+        <a class="main-button" href="#menu">🍽️ شوف المنيو</a>
+        <a class="outline-button" href="#order">🛒 اطلب دلوقتي</a>
+      </div>
+
+      <div class="features">
+        <div class="feature"><strong>🍲 أكل بيتي</strong><span>طعم يفرّح القلب</span></div>
+        <div class="feature"><strong>❤️ معمول بحب</strong><span>اهتمام بكل تفصيلة</span></div>
+        <div class="feature"><strong>🍮 حاجة حلوة</strong><span>دسبسيتو لكل المزاجات</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu">
+    <div class="container">
+      <div class="section-title">
+        <div class="eyebrow">اختار أكلك المفضل</div>
+        <h2>منيو ماما رهيبة</h2>
+        <p>دوّر على أكلك، اختار الصنف، وضيفه للسلة.</p>
+      </div>
+
+      <input id="search" class="search" type="search"
+        placeholder="🔎 ابحث عن أكلة أو دسبسيتو..."
+        oninput="renderMenu()">
+
+      <div class="filters">
+        <button class="filter active" onclick="setCategory('all',this)">كل المنيو</button>
+        <button class="filter" onclick="setCategory('meals',this)">🍗 الوجبات</button>
+        <button class="filter" onclick="setCategory('mahshi',this)">🍃 المحشي</button>
+        <button class="filter" onclick="setCategory('desserts',this)">🍮 الدسبسيتو</button>
+        <button class="filter" onclick="setCategory('drinks',this)">🥤 المشروبات</button>
+      </div>
+
+      <div class="menu-grid" id="menu-grid"></div>
+    </div>
+  </section>
+
+  <section id="about" class="about">
+    <div class="container about-content">
+      <div class="section-title">
+        <div class="eyebrow">حكاية طعم وحب</div>
+        <h2>أهلًا بيكم في <span style="color:var(--gold)">ماما رهيبة</span> ❤️</h2>
+      </div>
+      <p>
+        أكل بيتي بروح مصرية، ومحشي على الأصول، وحلويات تخلّي يومك أحلى.
+        اختار طلبك من المنيو وابعت التفاصيل على واتساب.
+      </p>
+      <a class="main-button" href="#menu">شوف المنيو</a>
+    </div>
+  </section>
+
+  <section id="order">
+    <div class="container">
+      <div class="section-title">
+        <div class="eyebrow">بالهنا والشفا</div>
+        <h2>راجع طلبك 🛒</h2>
+        <p>راجع الكميات والإجمالي قبل إرسال الأوردر.</p>
+      </div>
+
+      <div class="order-grid">
+        <div class="panel">
+          <h3>🛒 سلة المشتريات</h3>
+          <div class="cart-items" id="cart-items">
+            <div class="empty">السلة فاضية، اختار أكلك من المنيو ❤️</div>
+          </div>
+          <div class="total">
+            <span>الإجمالي</span>
+            <strong><span id="cart-total">0</span> جنيه</strong>
+          </div>
+          <button class="outline-button" style="width:100%;margin-top:12px;background:transparent"
+            onclick="clearCart()">إفراغ السلة</button>
+        </div>
+
+        <div class="panel">
+          <h3>📋 بيانات التوصيل</h3>
+          <form id="order-form" onsubmit="submitOrder(event)">
+            <div class="field">
+              <label for="customer-name">الاسم *</label>
+              <input id="customer-name" required placeholder="اكتب اسمك">
+            </div>
+
+            <div class="field">
+              <label for="customer-phone">رقم الموبايل *</label>
+              <input id="customer-phone" type="tel" required placeholder="رقم تليفونك">
+            </div>
+
+            <div class="field">
+              <label for="customer-address">العنوان بالتفصيل *</label>
+              <textarea id="customer-address" required placeholder="المنطقة والشارع والعنوان"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="customer-notes">ملاحظات إضافية</label>
+              <textarea id="customer-notes" placeholder="أي ملاحظات على الطلب"></textarea>
+            </div>
+
+            <button class="whatsapp" type="submit">🟢 إرسال الطلب على واتساب</button>
+            <p class="note">واتساب هيفتح برسالة جاهزة؛ راجعها واضغط إرسال بنفسك.</p>
+          </form>
+        </div>
+      </div>
+
+      <div class="contact">
+        <h3>❤️ ماما رهيبة مستنياكم</h3>
+        <p>اختار أكلك المفضل، وخلّي الحلو علينا!</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="logo">ماما رهيبة</div>
+    <p>طعم البيت المصري الأصيل ❤️</p>
+    <p>© <span id="year"></span> ماما رهيبة — جميع الحقوق محفوظة</p>
+  </div>
+</footer>
+
+<a class="floating-whatsapp" href="https://wa.me/201143813913"
+  target="_blank" rel="noopener noreferrer" aria-label="واتساب">☏</a>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// =====================================
+// إعدادات الموقع
+// غيّر رقم واتساب من هنا عند الحاجة.
+// اكتب كود الدولة ثم الرقم بدون الصفر الأول.
+// =====================================
+const WHATSAPP_NUMBER = "201143813913";
+
+// =====================================
+// المنتجات
+// لتغيير صورة أي صنف، عدّل image فقط.
+// مثال: image: "pstash.png"
+// يجب أن تكون الصورة موجودة بجانب index.html.
+// =====================================
+const products = [
+  {
+    id:"chicken",
+    name:"وجبة فرخة",
+    description:" فرخة كاملة + أرز بسمتي + ثومية + 10 أرغفة عيش.",
+    price:600,
+    category:"meals",
+    image:"WhatsApp Image 2026-10-24 at 10.30.30 PMs.jpeg",
+    imageAlt:"وجبة فرخة"
+  },
+  {
+    id:"grape",
+    name:"ورق عنب",
+    description:"ورق عنب محشي بطعم بيتي.",
+    price:160,
+    unit:"للكيلو",
+    category:"mahshi",
+    image:"nap.png",
+    imageAlt:"ورق عنب"
+  },
+  {
+    id:"cabbage",
+    name:"محشي كرنب",
+    description:"محشي كرنب على الطريقة المصرية.",
+    price:0,
+    category:"mahshi",
+    image:"krooo.png",
+    imageAlt:"محشي كرنب"
+  },
+  {
+    id:"zucchini",
+    name:"محشي كوسة",
+    description:"كوسة محشية بخلطة الأرز المصرية.",
+    price:0,
+    category:"mahshi",
+    image:"m.jpg",
+    imageAlt:"محشي كوسة"
+  },
+  {
+    id:"eggplant",
+    name:"محشي باذنجان",
+    description:"باذنجان محشي بتتبيلة مصرية.",
+    price:0,
+    category:"mahshi",
+    image:"WhatsApp Image 2026-10-24 at 10.05.18 PM.jpeg",
+    imageAlt:"محشي باذنجان"
+  },
+  {
+    id:"mixed",
+    name:"مشكل محشي",
+    description:"تشكيلة محشي متنوعة.",
+    price:0,
+    category:"mahshi",
+    image:"s.jpeg",
+    imageAlt:"مشكل محشي"
+  },
+
+  // ===== الدسبسيتو: اكتب اسم الصورة في image =====
+  {
+    id:"pistachio",
+    name:"دسبسيتو بستاشيو",
+    description:"دسبسيتو بطعم البستاشيو.",
+    price:50,
+    category:"desserts",
+    image:"pst.png",
+    imageAlt:"دسبسيتو بستاشيو"
+  },
+  {
+    id:"oreo",
+    name:"دسبسيتو أوريو",
+    description:"دسبسيتو بطعم الأوريو.",
+    price:45,
+    category:"desserts",
+    image:"or.png",
+    imageAlt:"دسبسيتو أوريو"
+  },
+  {
+    id:"cream",
+    name:"دسبسيتو كريمة",
+    description:"دسبسيتو بالكريمة.",
+    price:40,
+    category:"desserts",
+    image:"kr.png",
+    imageAlt:"دسبسيتو كريمة"
+  },
+  {
+    id:"oreo-pistachio",
+    name:"دسبسيتو أوريو بستاشيو",
+    description:"مزيج الأوريو والبستاشيو.",
+    price:60,
+    category:"desserts",
+    image:"orps.png",
+    imageAlt:"دسبسيتو أوريو بستاشيو"
+  },
+  {
+    id:"chocolate",
+    name:"دسبسيتو شوكولاتة",
+    description:"دسبسيتو بطعم الشوكولاتة.",
+    price:50,
+    category:"desserts",
+    image:"images (13).jfif",
+    imageAlt:"دسبسيتو شوكولاتة"
+  },
+  {
+    id:"mama",
+    name:"دسبسيتو ماما رهيبة",
+    description:"اختيار ماما رهيبة المميز.",
+    price:60,
+    category:"desserts",
+    image:"mix.png",
+    imageAlt:"دسبسيتو ماما رهيبة"
+  },
+
+  {
+    id:"pepsi",
+    name:"بيبسي",
+    description:"مشروب بيبسي.",
+    price:20,
+    category:"drinks",
+    image:"ooop.png",
+    imageAlt:"بيبسي"
+  },
+  {
+    id:"fayrouz",
+    name:"فيروز",
+    description:"مشروب فيروز.",
+    price:30,
+    category:"drinks",
+    image:"ooooo.png",
+    imageAlt:"فيروز"
+  }
+];
+
+let cart = {};
+let activeCategory = "all";
+
+function safeText(value) {
+  return String(value).replace(/[&<>"']/g, function(char) {
+    return {
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[char];
+  });
+}
+
+function imageHTML(product) {
+  if (!product.image) {
+    return `<div class="placeholder" style="display:flex">
+      <span>📷</span>مكان صورة ${safeText(product.name)}
+    </div>`;
+  }
+
+  return `
+    <img src="${safeText(product.image)}"
+         alt="${safeText(product.imageAlt || product.name)}"
+         loading="lazy"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="placeholder">
+      <span>📷</span>
+      الصورة مش موجودة<br>
+      <small>${safeText(product.image)}</small>
+    </div>`;
+}
+
+function renderMenu() {
+  const grid = document.getElementById("menu-grid");
+  const search = document.getElementById("search").value.trim().toLowerCase();
+
+  const filtered = products.filter(product => {
+    const matchesCategory =
+      activeCategory === "all" || product.category === activeCategory;
+    const matchesSearch =
+      (product.name + " " + product.description).toLowerCase().includes(search);
+    return matchesCategory && matchesSearch;
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#c4b4a2">مفيش نتائج للبحث ده.</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(product => {
+    const priceText = product.price > 0
+      ? `${product.price} جنيه${product.unit ? " / " + safeText(product.unit) : ""}`
+      : "السعر عند الطلب";
+
+    return `
+      <article class="food-card">
+        <div class="food-image">${imageHTML(product)}</div>
+        <div class="food-content">
+          <h3>${safeText(product.name)}</h3>
+          <p class="description">${safeText(product.description)}</p>
+          <div class="food-bottom">
+            <div class="price">${priceText}</div>
+            <button class="add-button"
+              ${product.price <= 0 ? "disabled" : ""}
+              onclick="addToCart('${product.id}')">
+              + أضف للسلة
+            </button>
+          </div>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+function setCategory(category, button) {
+  activeCategory = category;
+  document.querySelectorAll(".filter").forEach(item => item.classList.remove("active"));
+  button.classList.add("active");
+  renderMenu();
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function addToCart(id) {
+  const product = products.find(item => item.id === id);
+  if (!product || product.price <= 0) {
+    showToast("لازم تحدد سعر الصنف الأول.");
+    return;
+  }
+
+  cart[id] = (cart[id] || 0) + 1;
+  renderCart();
+  showToast("اتضاف " + product.name + " للسلة ❤️");
+}
+
+function changeQuantity(id, amount) {
+  if (!cart[id]) return;
+  cart[id] += amount;
+  if (cart[id] <= 0) delete cart[id];
+  renderCart();
+}
+
+function clearCart() {
+  cart = {};
+  renderCart();
+  showToast("السلة اتفضّت.");
+}
+
+function getTotal() {
+  return Object.keys(cart).reduce((sum, id) => {
+    const product = products.find(item => item.id === id);
+    return sum + (product ? product.price * cart[id] : 0);
+  }, 0);
+}
+
+function renderCart() {
+  const holder = document.getElementById("cart-items");
+  const ids = Object.keys(cart);
+  const count = Object.values(cart).reduce((sum, quantity) => sum + quantity, 0);
+
+  document.getElementById("cart-count").textContent = count;
+  document.getElementById("cart-total").textContent = getTotal().toLocaleString("en-US");
+
+  if (!ids.length) {
+    holder.innerHTML = '<div class="empty">السلة فاضية، اختار أكلك من المنيو ❤️</div>';
+    return;
+  }
+
+  holder.innerHTML = ids.map(id => {
+    const product = products.find(item => item.id === id);
+    const quantity = cart[id];
+
+    return `
+      <div class="cart-item">
+        <div>
+          <strong>${safeText(product.name)}</strong>
+          <small>${(product.price * quantity).toLocaleString("en-US")} جنيه</small>
+        </div>
+        <div class="qty">
+          <button type="button" aria-label="تقليل الكمية" onclick="changeQuantity('${id}',-1)">−</button>
+          <strong>${quantity}</strong>
+          <button type="button" aria-label="زيادة الكمية" onclick="changeQuantity('${id}',1)">+</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function goToCart() {
+  document.getElementById("order").scrollIntoView({behavior:"smooth"});
+}
+
+function submitOrder(event) {
+  event.preventDefault();
+
+  const ids = Object.keys(cart);
+  if (!ids.length) {
+    showToast("ضيف صنف للسلة الأول ❤️");
+    return;
+  }
+
+  const name = document.getElementById("customer-name").value.trim();
+  const phone = document.getElementById("customer-phone").value.trim();
+  const address = document.getElementById("customer-address").value.trim();
+  const notes = document.getElementById("customer-notes").value.trim();
+
+  const orderItems = ids.map(id => {
+    const product = products.find(item => item.id === id);
+    return `${product.name} × ${cart[id]} = ${product.price * cart[id]} جنيه`;
+  });
+
+  const message = [
+    "السلام عليكم، عايز أطلب من ماما رهيبة ❤️",
+    "",
+    "الاسم: " + name,
+    "رقم الموبايل: " + phone,
+    "العنوان: " + address,
+    "",
+    "تفاصيل الطلب:",
+    ...orderItems,
+    "",
+    "الإجمالي: " + getTotal() + " جنيه",
+    notes ? "ملاحظات: " + notes : "",
+    "",
+    "من فضلكم أكدوا الطلب ووقت التوصيل."
+  ].filter(Boolean).join("\n");
+
+  const url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
+document.getElementById("year").textContent = new Date().getFullYear();
+renderMenu();
+renderCart();
+</script>
+</body>
+</html>
